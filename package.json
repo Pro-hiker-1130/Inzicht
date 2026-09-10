@@ -3,5 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "description": "Learning project: a booking site for a solo therapist's private practice.",
-  "scripts": {}
+  "scripts": {
+    "db:init": "node src/lib/db/init.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0"
+  }
 }
