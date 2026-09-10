@@ -7,7 +7,24 @@ explained, and reviewed before moving on.
 
 ## Status
 
-Slice 0 (this commit): repo scaffold only. No feature code yet.
+All six planned phase-1 slices are in: data model, availability/booking
+logic with conflict prevention, the slot-picker UI, booking submission, a
+stubbed confirmation email, and an admin view (login, cancel bookings, block
+off time).
+
+## Running it
+
+```
+npm install
+npm run dev      # http://localhost:3000
+npm test         # availability/conflict logic tests
+npm run db:init  # create/inspect the SQLite file without starting the app
+```
+
+The admin view is at `/admin`. The password defaults to `changeme` — set
+`ADMIN_PASSWORD` in the environment (e.g. an untracked `.env.local`) to
+change it. See "Explicitly out of scope" below for why this is deliberately
+minimal.
 
 ## Stack decisions
 
@@ -48,7 +65,10 @@ src/
                      tests, since it's the core of what a scheduling app does.
     email/         Email sending. Stubbed (console.log) for now — no real
                      provider until this becomes more than a learning project.
-  components/      Shared React UI components.
+  components/      Shared React UI components (components/admin/ for the
+                     admin-only ones).
+  proxy.js         Next.js proxy (formerly "middleware"): gates /admin and
+                     /api/admin behind the admin password.
 tests/            Tests, focused first on src/lib/availability/.
 data/             SQLite database file lives here at runtime (gitignored).
 ```
@@ -60,5 +80,7 @@ data/             SQLite database file lives here at runtime (gitignored).
 - HIPAA compliance / real client health data — this is a learning project.
   If it's ever pointed at real clients, encryption, hosting, and compliance
   need a dedicated pass before that happens.
-- Auth beyond a single hardcoded admin password
+- Auth beyond a single hardcoded admin password — no hashing, no rate
+  limiting, no CSRF protection, no real session tokens. Fine for a learning
+  project; would need real auth before ever holding real client data.
 - Multi-timezone support (single practice timezone only)

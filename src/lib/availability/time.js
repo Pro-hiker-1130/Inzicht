@@ -23,4 +23,27 @@ function addMinutes(localIso, minutes) {
   );
 }
 
-module.exports = { addMinutes };
+const { PRACTICE_TIMEZONE } = require('../config');
+
+// Unlike addMinutes above, "now" is a real instant, not naive local
+// arithmetic — this genuinely needs to ask "what time is it in
+// Europe/Brussels right now", which Intl.DateTimeFormat with a timeZone
+// option answers correctly regardless of what timezone the server process
+// itself happens to be running in. hourCycle 'h23' avoids an ICU quirk
+// where some environments render midnight as "24:00" instead of "00:00".
+function nowInPracticeTimezone() {
+  const formatter = new Intl.DateTimeFormat('en-CA', {
+    timeZone: PRACTICE_TIMEZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hourCycle: 'h23',
+  });
+  const parts = Object.fromEntries(formatter.formatToParts(new Date()).map((p) => [p.type, p.value]));
+  return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}:${parts.second}`;
+}
+
+module.exports = { addMinutes, nowInPracticeTimezone };
