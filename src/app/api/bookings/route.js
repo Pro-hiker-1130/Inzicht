@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '../../../lib/db/connection';
 import { createBooking, SlotUnavailableError } from '../../../lib/availability/createBooking';
+import { sendConfirmationEmail } from '../../../lib/email/sendConfirmationEmail';
 
 const TIMESTAMP_PATTERN = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/;
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -35,6 +36,16 @@ export async function POST(request) {
       clientEmail: clientEmail.trim(),
       reason: typeof reason === 'string' && reason.trim() !== '' ? reason.trim() : null,
     });
+
+    // Sending the confirmation is a side effect of a successful booking, not
+    // part of it — a failure here shouldn't undo (or appear to undo) a
+    // booking that's already safely in the database, so it's outside the
+    // createBooking() transaction and only logged if it goes wrong.
+    try {
+      sendConfirmationEmail(booking);
+    } catch (emailError) {
+      console.error('Failed to send confirmation email:', emailError);
+    }
 
     return NextResponse.json({ booking }, { status: 201 });
   } catch (error) {
