@@ -4,7 +4,8 @@
   "private": true,
   "description": "Learning project: a booking site for a solo therapist's private practice.",
   "scripts": {
-    "db:init": "node src/lib/db/init.js"
+    "db:init": "node src/lib/db/init.js",
+    "test": "node --test"
   },
   "dependencies": {
     "better-sqlite3": "^11.3.0"

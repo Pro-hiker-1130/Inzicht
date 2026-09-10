@@ -38,3 +38,12 @@ CREATE TABLE IF NOT EXISTS bookings (
 );
 
 CREATE INDEX IF NOT EXISTS idx_bookings_start_at ON bookings (start_at);
+
+-- Database-level backstop against double-booking: two confirmed bookings
+-- can never share an exact start time. This doesn't catch every possible
+-- overlap (SQLite has no range-exclusion constraint like Postgres's
+-- EXCLUDE USING gist), but it catches the common case for free, even if the
+-- application-level conflict check in createBooking() ever had a bug.
+CREATE UNIQUE INDEX IF NOT EXISTS idx_bookings_unique_confirmed_start
+  ON bookings (start_at)
+  WHERE status = 'confirmed';
