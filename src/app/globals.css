@@ -1,0 +1,63 @@
+/* Deliberately minimal — placeholder styling until the real hero/about/
+   services/FAQ HTML/CSS reference is shared and the public site is built
+   out around it. */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  color: #222;
+  background: #fafafa;
+}
+
+.hero {
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+
+.booking-section {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.slot-picker label {
+  display: block;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.slot-picker input[type='date'] {
+  display: block;
+  margin-top: 0.25rem;
+  padding: 0.4rem;
+  font: inherit;
+}
+
+.slot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 0.5rem;
+}
+
+.slot {
+  padding: 0.5rem;
+  border: 1px solid #999;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.slot:hover {
+  border-color: #333;
+}
+
+.slot.selected {
+  background: #222;
+  color: white;
+  border-color: #222;
+}

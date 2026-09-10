@@ -2,8 +2,12 @@ const path = require('path');
 const fs = require('fs');
 const Database = require('better-sqlite3');
 
-const DB_PATH = path.join(__dirname, '..', '..', '..', 'data', 'inzicht.db');
-const SCHEMA_PATH = path.join(__dirname, 'schema.sql');
+// Anchored at process.cwd(), not __dirname: Next.js bundles route handlers
+// into .next/server/..., where __dirname no longer points at the source
+// tree, but the process's working directory is still the project root under
+// `next dev`/`next start`, `npm test`, and plain `node` invocations alike.
+const DB_PATH = path.join(process.cwd(), 'data', 'inzicht.db');
+const SCHEMA_PATH = path.join(process.cwd(), 'src', 'lib', 'db', 'schema.sql');
 
 let db;
 
