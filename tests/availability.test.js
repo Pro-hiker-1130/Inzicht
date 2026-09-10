@@ -52,8 +52,8 @@ test('getOpenSlots: an open block with no bookings returns all its slots', () =>
   ).run('2026-09-15T09:00:00', '2026-09-15T10:00:00', 30);
 
   assert.deepEqual(getOpenSlots(db, '2026-09-15'), [
-    { start_at: '2026-09-15T09:00:00', end_at: '2026-09-15T09:30:00' },
-    { start_at: '2026-09-15T09:30:00', end_at: '2026-09-15T10:00:00' },
+    { start_at: '2026-09-15T09:00:00', end_at: '2026-09-15T09:30:00', availability_block_id: 1 },
+    { start_at: '2026-09-15T09:30:00', end_at: '2026-09-15T10:00:00', availability_block_id: 1 },
   ]);
 });
 
@@ -67,7 +67,7 @@ test('getOpenSlots: a confirmed booking removes only that slot', () => {
   ).run('2026-09-15T09:00:00', '2026-09-15T09:30:00', 'A', 'a@example.com');
 
   assert.deepEqual(getOpenSlots(db, '2026-09-15'), [
-    { start_at: '2026-09-15T09:30:00', end_at: '2026-09-15T10:00:00' },
+    { start_at: '2026-09-15T09:30:00', end_at: '2026-09-15T10:00:00', availability_block_id: 1 },
   ]);
 });
 
@@ -91,7 +91,7 @@ test('getOpenSlots: a slot that would run past the end of the block is dropped',
   ).run('2026-09-15T09:00:00', '2026-09-15T09:45:00', 30);
 
   assert.deepEqual(getOpenSlots(db, '2026-09-15'), [
-    { start_at: '2026-09-15T09:00:00', end_at: '2026-09-15T09:30:00' },
+    { start_at: '2026-09-15T09:00:00', end_at: '2026-09-15T09:30:00', availability_block_id: 1 },
   ]);
 });
 

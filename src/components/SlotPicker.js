@@ -19,7 +19,7 @@ function formatTime(localIso) {
 // visitor click one. Selection is lifted to the parent via props rather than
 // handled here, so this component doesn't need to know anything about
 // submitting a booking.
-export default function SlotPicker({ selectedSlot, onSelectSlot }) {
+export default function SlotPicker({ selectedSlot, onSelectSlot, refreshToken = 0 }) {
   const [date, setDate] = useState(todayIsoDate());
   const [slots, setSlots] = useState([]);
   const [status, setStatus] = useState('loading'); // loading | ready | error
@@ -45,7 +45,10 @@ export default function SlotPicker({ selectedSlot, onSelectSlot }) {
     return () => {
       cancelled = true;
     };
-  }, [date]);
+    // refreshToken has no meaning of its own — bumping it from the parent
+    // (after a successful booking, or a 409 conflict) just forces a refetch
+    // so the slot list reflects reality again.
+  }, [date, refreshToken]);
 
   return (
     <div className="slot-picker">

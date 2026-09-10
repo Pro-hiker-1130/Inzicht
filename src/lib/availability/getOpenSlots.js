@@ -37,7 +37,10 @@ function getOpenSlots(db, dateStr) {
         rangesOverlap(slotStart, slotEnd, busy.start_at, busy.end_at)
       );
       if (!isBusy) {
-        slots.push({ start_at: slotStart, end_at: slotEnd });
+        // availability_block_id travels with the slot purely so a booking
+        // made from it can record where it came from (see schema.sql) —
+        // it's not used for anything else on the read side.
+        slots.push({ start_at: slotStart, end_at: slotEnd, availability_block_id: block.id });
       }
       slotStart = slotEnd;
     }
